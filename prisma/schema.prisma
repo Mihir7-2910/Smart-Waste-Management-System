@@ -1,0 +1,129 @@
+// ==========================================================
+// CORE DATABASE SCHEMA
+// Covers: Users/Auth, Bins, Complaints, Assignments, Notifications
+// Other teams (AI, GIS, Logistics) will read/write into these
+// same tables, so this schema is the single source of truth.
+// ==========================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------- ENUMS ----------------
+
+enum Role {
+  CITIZEN
+  ADMIN
+  WORKER
+}
+
+enum BinStatus {
+  EMPTY
+  FILLING
+  FULL
+  OVERFLOW
+  DAMAGED
+}
+
+enum ComplaintStatus {
+  PENDING       // just reported, not yet assigned
+  ASSIGNED      // worker assigned by logistics module
+  IN_PROGRESS   // worker has started/reached location
+  RESOLVED      // after-photo uploaded + AI verified
+  REJECTED      // AI verification failed / invalid complaint
+}
+
+// ---------------- MODELS ----------------
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  phone        String?  @unique
+  passwordHash String
+  role         Role     @default(CITIZEN)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  complaints   Complaint[]   @relation("CitizenComplaints")
+  assignments  Assignment[]  @relation("WorkerAssignments")
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Bin {
+  id          String    @id @default(uuid())
+  code        String    @unique          // e.g. BIN-AHD-0001
+  address     String
+  latitude    Float
+  longitude   Float
+  capacityL   Int       @default(100)     // capacity in litres
+  status      BinStatus @default(EMPTY)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  complaints  Complaint[]
+
+  @@map("bins")
+}
+
+model Complaint {
+  id             String          @id @default(uuid())
+  citizenId      String
+  citizen        User            @relation("CitizenComplaints", fields: [citizenId], references: [id])
+
+  binId          String?
+  bin            Bin?            @relation(fields: [binId], references: [id])
+
+  description    String
+  beforeImageUrl String
+  afterImageUrl  String?
+
+  latitude       Float           // where citizen reported from (GIS team will use this)
+  longitude      Float
+
+  status         ComplaintStatus @default(PENDING)
+  aiVerified     Boolean?        // null = not checked yet, true/false = AI result
+  aiConfidence   Float?          // AI & Image team fills this (0.0 - 1.0)
+
+  slaDeadline    DateTime?       // Logistics team sets/updates this
+  createdAt      DateTime        @default(now())
+  resolvedAt     DateTime?
+
+  assignment     Assignment?
+
+  @@map("complaints")
+}
+
+model Assignment {
+  id              String    @id @default(uuid())
+  complaintId     String    @unique
+  complaint       Complaint @relation(fields: [complaintId], references: [id])
+
+  workerId        String
+  worker          User      @relation("WorkerAssignments", fields: [workerId], references: [id])
+
+  assignedAt      DateTime  @default(now())
+  slaDeadline     DateTime
+  reassignedCount Int       @default(0)
+  isActive        Boolean   @default(true)
+
+  @@map("assignments")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
