@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Camera,
-  Search,
-  Sparkles,
-  Award,
-  CheckCircle2,
-  TrendingUp,
-  ShieldCheck,
-  MapPin,
   ArrowRight,
+  Award,
+  BellRing,
+  Camera,
+  CheckCircle2,
+  CircleDashed,
+  MapPinned,
+  MessageSquare,
   RefreshCw,
-  Heart,
-  Users,
-  Flame,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  TrendingUp,
   Truck,
-  Building2,
-  ChevronRight,
-  MessageSquare
+  Users
 } from 'lucide-react';
 import {
   CLEANLINESS_QUOTES,
@@ -24,6 +22,7 @@ import {
   CLEAN_CITY_TIPS,
   COMMUNITY_IMPACT
 } from '../../data/mockData';
+import cleanCityImage from '../../assets/clean-city.jpg';
 
 export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenKarma, activeComplaintsCount }) {
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -37,135 +36,224 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
 
   const currentQuote = CLEANLINESS_QUOTES[quoteIndex];
 
+  const features = [
+    {
+      icon: <MapPinned className="h-5 w-5 text-emerald-300" />,
+      title: 'Live waste hotspots',
+      description: 'Track overflowing bins and illegal dumping clusters before they spread.'
+    },
+    {
+      icon: <Truck className="h-5 w-5 text-cyan-300" />,
+      title: 'Auto-dispatch fleet',
+      description: 'Nearest drivers are assigned automatically for faster response times.'
+    },
+    {
+      icon: <BellRing className="h-5 w-5 text-amber-300" />,
+      title: 'Smart citizen alerts',
+      description: 'Get updates on complaint status, ETA, and cleanup confirmation.'
+    }
+  ];
+
+  const steps = [
+    { number: '01', title: 'Report', description: 'Take a photo and share the exact location in under a minute.' },
+    { number: '02', title: 'Dispatch', description: 'Our AI matches the issue to the nearest municipal vehicle and crew.' },
+    { number: '03', title: 'Resolve', description: 'Track progress live and confirm the area is cleaned and safe.' }
+  ];
+
   return (
-    <div className="space-y-12 animate-fadeIn pb-12">
-      {/* Hero Section */}
-      <section className="relative rounded-3xl bg-gradient-to-br from-emerald-950/80 via-slate-900 to-teal-950/80 border border-emerald-500/30 p-8 sm:p-12 overflow-hidden shadow-2xl">
-        {/* Background decorative elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
+    <div
+      className="landing-page space-y-8 animate-fadeIn pb-12"
+      style={{
+        '--landing-wallpaper': `url('${cleanCityImage}')`,
+        backgroundImage:
+          `linear-gradient(rgba(2, 6, 23, 0.72), rgba(2, 6, 23, 0.82)), url('${cleanCityImage}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <section
+        className="landing-hero relative overflow-hidden rounded-[28px] border border-emerald-500/25 p-6 shadow-[0_30px_90px_rgba(16,185,129,0.16)] sm:p-8 lg:p-10"
+        style={{
+          backgroundImage:
+            `linear-gradient(135deg, rgba(2, 6, 23, 0.84), rgba(8, 47, 73, 0.7), rgba(2, 44, 34, 0.82)), url('${cleanCityImage}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.24),_transparent_35%),radial-gradient(circle_at_bottom_left,_rgba(34,211,238,0.18),_transparent_32%)]" />
+        <div className="absolute -right-12 top-10 h-40 w-40 rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="absolute -left-12 bottom-12 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
 
-        <div className="relative z-10 max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-400">
-            <Sparkles size={14} className="animate-spin" style={{ animationDuration: '6s' }} />
-            <span>SIH 2026 Smart Waste Response Platform</span>
-          </div>
-
-          <h1 className="font-heading font-black text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
-            Together, We Keep <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">
-              Our City Clean & Green.
-            </span>
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-300 font-medium">
-            “See waste. Report it. Help us resolve it.” <br className="hidden sm:inline" />
-            CleanCity AI automatically connects your report with the nearest municipal sanitation vehicle within seconds.
-          </p>
-
-          {/* Primary & Secondary CTAs */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
-            <button
-              onClick={onRaiseComplaint}
-              className="px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-heading font-extrabold text-base shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-0.5 flex items-center gap-2.5 cursor-pointer"
-            >
-              <Camera size={20} />
-              <span>Raise a Complaint</span>
-            </button>
-
-            <button
-              onClick={onTrackComplaint}
-              className="px-6 py-4 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-white font-heading font-bold text-sm border border-slate-700 hover:border-slate-600 transition-all flex items-center gap-2 cursor-pointer shadow-lg"
-            >
-              <Search size={18} className="text-emerald-400" />
-              <span>Track My Complaint</span>
-            </button>
-          </div>
-
-          {/* SLA Badge */}
-          <div className="flex items-center gap-4 pt-4 text-xs text-slate-400 font-medium border-t border-slate-800/80">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
-              <ShieldCheck size={16} />
-              <span>4-Hour Municipal SLA Guarantee</span>
+        <div className="relative z-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">
+              <Sparkles size={14} className="animate-pulse" />
+              Smart waste response
             </div>
-            <span>•</span>
-            <div className="flex items-center gap-1.5 text-slate-300">
-              <MessageSquare size={14} className="text-green-400" />
-              <span>Instant Digital WhatsApp Receipt</span>
+
+            <div className="space-y-4">
+              <h1 className="landing-hero-title text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Cleaner streets,
+                <span className="block bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 bg-clip-text text-transparent">
+                  faster action.
+                </span>
+              </h1>
+              <p className="landing-hero-copy max-w-xl text-base text-slate-300 sm:text-lg">
+                Report garbage, overflow, and dumping instantly. CleanCity AI routes the issue to the nearest team and keeps citizens informed every step of the way.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={onRaiseComplaint}
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-400 px-6 py-3.5 text-sm font-extrabold text-slate-950 shadow-lg shadow-emerald-500/25 transition hover:-translate-y-0.5 hover:shadow-emerald-400/35"
+              >
+                <Camera size={18} />
+                Raise complaint
+              </button>
+
+              <button
+                onClick={onTrackComplaint}
+                className="inline-flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-900/80 px-5 py-3.5 text-sm font-bold text-slate-100 transition hover:border-emerald-500/40 hover:bg-slate-800"
+              >
+                <Search size={18} className="text-emerald-300" />
+                Track complaint
+              </button>
+            </div>
+
+            <div className="flex flex-wrap gap-4 border-t border-slate-800/80 pt-4 text-xs text-slate-400">
+              <span className="inline-flex items-center gap-2 text-emerald-300">
+                <ShieldCheck size={15} />
+                4-hour SLA guarantee
+              </span>
+              <span className="inline-flex items-center gap-2 text-slate-300">
+                <MessageSquare size={15} className="text-green-400" />
+                WhatsApp confirmations
+              </span>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-[24px] border border-slate-700/80 bg-slate-950/75 p-4 shadow-2xl backdrop-blur-xl">
+              <div className="mb-4 flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-2">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-emerald-300">Live status</p>
+                  <p className="mt-1 text-lg font-bold text-white">City operations online</p>
+                </div>
+                <span className="flex h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.9)]" />
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Open complaints</p>
+                  <p className="mt-2 text-3xl font-black text-white">{activeComplaintsCount ?? 128}</p>
+                  <p className="mt-1 text-xs text-emerald-300">+18% from last week</p>
+                </div>
+
+                <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Avg. response</p>
+                  <p className="mt-2 text-3xl font-black text-cyan-300">2.8h</p>
+                  <p className="mt-1 text-xs text-cyan-300">Inside target SLA</p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-400">Priority queue</p>
+                    <p className="mt-1 text-sm font-semibold text-white">Overflowing bins near civic square</p>
+                  </div>
+                  <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-300">
+                    High
+                  </span>
+                </div>
+                <div className="mt-4 h-2 rounded-full bg-slate-800">
+                  <div className="h-2 w-3/4 rounded-full bg-gradient-to-r from-emerald-400 to-cyan-400" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Rotating Cleanliness Quote of the Day */}
-      <section className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center justify-center flex-shrink-0 text-xl font-serif font-black">
-            “
+      <section className="rounded-[26px] border border-slate-800 bg-slate-900/75 p-5 shadow-xl">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-500/30 bg-amber-500/10 text-xl font-black text-amber-300">“</div>
+            <div>
+              <p className="text-sm font-medium italic text-slate-100">"{currentQuote.quote}"</p>
+              <span className="mt-1 block text-xs text-slate-400">— {currentQuote.author}</span>
+            </div>
           </div>
-          <div>
-            <p className="text-sm font-semibold text-white italic">
-              "{currentQuote.quote}"
-            </p>
-            <span className="text-xs text-slate-400 block mt-0.5 font-medium">
-              — {currentQuote.author}
-            </span>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={() => setQuoteIndex((prev) => (prev + 1) % CLEANLINESS_QUOTES.length)}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-all text-xs font-bold flex items-center gap-1 cursor-pointer"
-            title="Next Quote"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/80 px-3 py-2 text-xs font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-white"
           >
             <RefreshCw size={14} />
-            <span>Next Tip</span>
+            Next tip
           </button>
         </div>
       </section>
 
-      {/* Cleanliness Awareness Posters (Digital Cards) */}
       <section className="space-y-4">
-        <div className="flex justify-between items-end">
+        <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 block mb-1">
-              Public Cleanliness Campaign
-            </span>
-            <h2 className="font-heading font-extrabold text-2xl text-white">
-              Civic Cleanliness Awareness
-            </h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Better city operations</p>
+            <h2 className="mt-1 text-2xl font-black text-white">How the platform works</h2>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {AWARENESS_POSTERS.map((poster) => (
-            <div
-              key={poster.id}
-              className={`rounded-3xl p-6 border ${poster.borderColor} bg-gradient-to-br ${poster.bgGradient} shadow-xl hover:shadow-2xl transition-all space-y-4 flex flex-col justify-between group`}
-            >
-              <div className="space-y-3">
-                <div className="flex justify-between items-start">
-                  <span className="text-3xl">{poster.icon}</span>
-                  <span className={`text-[10px] uppercase font-mono font-bold px-2.5 py-0.5 rounded-full bg-slate-950/80 border border-slate-800 ${poster.textColor}`}>
-                    {poster.tag}
-                  </span>
-                </div>
-                <h3 className="font-heading font-black text-lg text-white group-hover:text-emerald-300 transition-colors">
-                  {poster.title}
-                </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  {poster.desc}
-                </p>
+        <div className="grid gap-4 lg:grid-cols-3">
+          {steps.map((step) => (
+            <div key={step.number} className="workflow-card rounded-[22px] border border-slate-800 bg-slate-900/70 p-5 shadow-lg transition hover:-translate-y-1 hover:border-emerald-500/35">
+              <div className="mb-4 inline-flex items-center justify-center rounded-xl border border-emerald-500/35 bg-emerald-500/10 px-2.5 py-1.5 text-xs font-black text-emerald-300">
+                {step.number}
               </div>
+              <h3 className="text-xl font-black text-white">{step.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-400">{step.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-3">
+        {features.map((feature) => (
+          <div key={feature.title} className="feature-card rounded-[24px] border border-slate-800 bg-gradient-to-br from-slate-900 to-slate-950 p-5 shadow-xl">
+            <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-700 bg-slate-900">{feature.icon}</div>
+            <h3 className="text-lg font-black text-white">{feature.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate-400">{feature.description}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="space-y-4">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal-300">Public awareness</p>
+          <h2 className="mt-1 text-2xl font-black text-white">Civic cleanliness awareness</h2>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {AWARENESS_POSTERS.map((poster) => (
+            <div key={poster.id} className={`awareness-card rounded-[24px] border p-5 ${poster.borderColor} bg-gradient-to-br ${poster.bgGradient} shadow-lg`}>
+              <div className="flex items-start justify-between gap-3">
+                <span className="text-3xl">{poster.icon}</span>
+                <span className={`rounded-full border border-slate-800 bg-slate-950/80 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.12em] ${poster.textColor}`}>
+                  {poster.tag}
+                </span>
+              </div>
+              <h3 className="mt-4 text-xl font-black text-white">{poster.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-300">{poster.desc}</p>
 
               {poster.id === 'post-5' && (
                 <button
                   onClick={onRaiseComplaint}
-                  className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer mt-2"
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 px-3 py-2.5 text-sm font-black text-slate-950 transition hover:bg-amber-300"
                 >
-                  <Camera size={14} />
-                  <span>Report Now & Earn Karma</span>
+                  <Camera size={15} />
+                  Report now
                 </button>
               )}
             </div>
@@ -173,93 +261,83 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
         </div>
       </section>
 
-      {/* Clean City Tips (Compact Cards) */}
       <section className="space-y-4">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-teal-400 block mb-1">
-            Everyday Habits
-          </span>
-          <h2 className="font-heading font-extrabold text-2xl text-white">
-            Clean City Best Practices
-          </h2>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Everyday habits</p>
+          <h2 className="mt-1 text-2xl font-black text-white">Clean city best practices</h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {CLEAN_CITY_TIPS.map((tip, idx) => (
-            <div
-              key={idx}
-              className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/80 hover:border-slate-700 transition-all flex items-start gap-3.5"
-            >
-              <span className="text-2xl flex-shrink-0 mt-0.5">{tip.icon}</span>
-              <div className="space-y-1">
-                <h4 className="text-xs font-bold text-white">{tip.title}</h4>
-                <p className="text-[11px] text-slate-400 leading-normal">{tip.desc}</p>
+            <div key={idx} className="habit-card flex gap-3 rounded-[22px] border border-slate-800 bg-slate-900/70 p-4">
+              <span className="text-2xl">{tip.icon}</span>
+              <div>
+                <h4 className="text-sm font-bold text-white">{tip.title}</h4>
+                <p className="mt-1 text-xs leading-relaxed text-slate-400">{tip.desc}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Community Impact Statistics */}
-      <section className="rounded-3xl bg-slate-900/90 border border-slate-800 p-6 sm:p-8 shadow-2xl space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-4">
+      <section className="rounded-[28px] border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="font-heading font-extrabold text-xl text-white">
-              Civic Community Impact
-            </h3>
-            <p className="text-xs text-slate-400">Real-time municipal grievance resolution metrics for SIH 2026</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Community impact</p>
+            <h3 className="mt-1 text-2xl font-black text-white">City-wide waste response metrics</h3>
           </div>
           <button
             onClick={onOpenKarma}
-            className="text-xs font-bold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 px-3 py-1.5 rounded-xl border border-amber-500/30 flex items-center gap-1.5 transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-300 transition hover:bg-amber-500/15"
           >
             <Award size={15} />
-            <span>View Citizen Leaderboard</span>
+            View leaderboard
           </button>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Total Grievances Logged</span>
-            <p className="text-2xl font-black text-white font-heading">{COMMUNITY_IMPACT.issuesReported}</p>
-            <span className="text-[10px] text-slate-500">Across 12 City Wards</span>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Grievances logged</p>
+            <p className="mt-2 text-3xl font-black text-white">{COMMUNITY_IMPACT.issuesReported}</p>
+            <p className="mt-1 text-xs text-slate-500">Across 12 city wards</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/70 border border-emerald-500/30 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-emerald-400">Successfully Cleaned</span>
-            <p className="text-2xl font-black text-emerald-400 font-heading">{COMMUNITY_IMPACT.issuesResolved}</p>
-            <span className="text-[10px] text-emerald-400 font-bold">{COMMUNITY_IMPACT.resolutionRate} Resolution Rate</span>
+          <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-emerald-300">Cleaned</p>
+            <p className="mt-2 text-3xl font-black text-emerald-300">{COMMUNITY_IMPACT.issuesResolved}</p>
+            <p className="mt-1 text-xs text-emerald-200">{COMMUNITY_IMPACT.resolutionRate} resolution rate</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Average Turnaround</span>
-            <p className="text-2xl font-black text-cyan-400 font-heading">{COMMUNITY_IMPACT.avgResponseHours}</p>
-            <span className="text-[10px] text-cyan-400 font-semibold">Well within 4.0 hr SLA</span>
+          <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-cyan-300">Turnaround</p>
+            <p className="mt-2 text-3xl font-black text-cyan-300">{COMMUNITY_IMPACT.avgResponseHours}</p>
+            <p className="mt-1 text-xs text-cyan-200">Within SLA target</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Active Compactors / Tippers</span>
-            <p className="text-2xl font-black text-purple-400 font-heading">{COMMUNITY_IMPACT.activeSanitationFleet}</p>
-            <span className="text-[10px] text-slate-500">GPS Automated Fleet</span>
+          <div className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-4">
+            <p className="text-[10px] uppercase tracking-[0.18em] text-violet-300">Fleet active</p>
+            <p className="mt-2 text-3xl font-black text-violet-300">{COMMUNITY_IMPACT.activeSanitationFleet}</p>
+            <p className="mt-1 text-xs text-violet-200">GPS tracked vehicles</p>
           </div>
         </div>
       </section>
 
-      {/* Bottom Floating CTA Banner */}
-      <section className="rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 p-8 shadow-2xl text-center space-y-4 text-slate-950">
-        <h3 className="font-heading font-black text-2xl sm:text-3xl text-slate-950">
-          Spot Garbage in Your Neighbourhood?
-        </h3>
-        <p className="text-xs sm:text-sm font-medium text-slate-900 max-w-xl mx-auto">
-          Capture photo, drop a pin, and our automated dispatch algorithm assigns the nearest compactor vehicle instantly.
-        </p>
-        <div className="pt-2">
+      <section className="rounded-[28px] bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 p-8 text-slate-950 shadow-[0_25px_80px_rgba(16,185,129,0.35)]">
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-slate-950/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em]">
+            <TrendingUp size={14} />
+            Act now
+          </div>
+          <h3 className="text-3xl font-black text-slate-950">Spot litter in your neighbourhood?</h3>
+          <p className="max-w-xl text-sm text-slate-900/80">
+            Capture the issue, send the location, and let CleanCity AI connect it to the nearest sanitation response in minutes.
+          </p>
           <button
             onClick={onRaiseComplaint}
-            className="px-8 py-3.5 rounded-2xl bg-slate-950 hover:bg-slate-900 text-white font-heading font-black text-sm shadow-xl transition-all inline-flex items-center gap-2 cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-6 py-3.5 text-sm font-black text-white transition hover:bg-slate-900"
           >
-            <Camera size={18} className="text-emerald-400" />
-            <span>Report Waste Problem Now</span>
+            Report waste now
+            <ArrowRight size={16} />
           </button>
         </div>
       </section>

@@ -17,6 +17,7 @@ import { api } from './services/api';
 export function App() {
   // Authentication Role State: 'CITIZEN' (Public Default), 'ADMIN', 'DRIVER'
   const [currentUser, setCurrentUser] = useState({ role: 'CITIZEN' });
+  const [theme, setTheme] = useState(() => localStorage.getItem('cleancity-theme') || 'dark');
   const [activeTab, setActiveTab] = useState('citizen-home');
   const [complaints, setComplaints] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -32,6 +33,11 @@ export function App() {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('cleancity-theme', theme);
+  }, [theme]);
 
   const loadData = async () => {
     const cList = await api.getComplaints();
@@ -122,6 +128,8 @@ export function App() {
         onLogout={handleLogout}
         onOpenKarma={() => setIsKarmaOpen(true)}
         onOpenTrackModal={() => setIsTrackModalOpen(true)}
+        theme={theme}
+        onToggleTheme={() => setTheme((currentTheme) => currentTheme === 'dark' ? 'light' : 'dark')}
         pendingCount={pendingCount}
         searchingCount={searchingCount}
       />

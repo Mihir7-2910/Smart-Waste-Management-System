@@ -14,7 +14,9 @@ import {
   Search,
   Lock,
   LogOut,
-  UserCheck
+  UserCheck,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 export function Navbar({
@@ -26,7 +28,9 @@ export function Navbar({
   onOpenKarma,
   onOpenTrackModal,
   pendingCount,
-  searchingCount
+  searchingCount,
+  theme,
+  onToggleTheme
 }) {
   const [time, setTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: true }));
 
@@ -214,6 +218,14 @@ export function Navbar({
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-2.5">
+            <button
+              onClick={onToggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="theme-toggle rounded-xl border border-slate-700 bg-slate-900 px-2.5 py-2 text-slate-300 transition-all hover:border-emerald-500/50 hover:text-emerald-400 cursor-pointer"
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             {/* Karma button (citizen mode) */}
             {isCitizen && (
               <button
