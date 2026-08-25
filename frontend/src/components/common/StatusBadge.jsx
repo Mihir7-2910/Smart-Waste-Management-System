@@ -1,6 +1,8 @@
 import React from 'react';
+import { useLanguage } from '../../i18n';
 
 export function StatusBadge({ status }) {
+  const { translate } = useLanguage();
   const map = {
     PENDING: { bg: 'bg-amber-500/15 text-amber-400 border-amber-500/30', label: 'Pending' },
     ASSIGNED: { bg: 'bg-blue-500/15 text-blue-400 border-blue-500/30', label: 'Assigned' },
@@ -21,7 +23,7 @@ export function StatusBadge({ status }) {
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${item.bg}`}>
       <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-      {item.label}
+      {translate(item.label)}
     </span>
   );
 }

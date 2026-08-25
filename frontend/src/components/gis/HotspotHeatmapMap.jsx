@@ -203,7 +203,6 @@ export function HotspotHeatmapMap({ predictions = AI_PREDICTIONS }) {
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
                 <h3 className="font-heading font-bold text-base text-white">AI Surge Forecasts</h3>
-                <p className="text-xs text-slate-400">Proactive event-based municipal recommendations</p>
               </div>
               <span className="text-xs font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded font-bold">
                 {predictions.length} Active Alerts

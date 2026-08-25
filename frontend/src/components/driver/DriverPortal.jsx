@@ -419,7 +419,6 @@ export function DriverPortal({
           <div className="lg:col-span-4 bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 shadow-xl space-y-4">
             <div className="border-b border-slate-800 pb-3">
               <h4 className="font-heading font-bold text-base text-white">Today's Optimized Route</h4>
-              <p className="text-xs text-slate-400">Sequenced to minimize distance & fuel usage</p>
             </div>
 
             <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">

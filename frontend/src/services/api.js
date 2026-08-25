@@ -51,6 +51,11 @@ export function saveStoredDrivers(drivers) {
   localStorage.setItem(STORAGE_KEYS.DRIVERS, JSON.stringify(drivers));
 }
 
+function getImageFingerprint(imageUrl) {
+  if (!imageUrl) return null;
+  return imageUrl.split('?')[0];
+}
+
 // Generate Structured WhatsApp Message for Initial Registration
 export function generateInitialWhatsAppTicket(complaint) {
   const dateStr = new Date(complaint.createdAt || Date.now()).toLocaleDateString('en-IN', {
@@ -156,6 +161,24 @@ export const api = {
   // 1. Citizen Creates Complaint
   async createComplaint(data) {
     const complaints = getStoredComplaints();
+    const imageFingerprint = getImageFingerprint(data.imageFingerprint);
+    const duplicate = imageFingerprint && complaints.find((complaint) => {
+      const createdAt = new Date(complaint.createdAt || 0).getTime();
+      const isRecent = Date.now() - createdAt <= 10 * 60 * 1000;
+      return isRecent && complaint.imageFingerprint === imageFingerprint;
+    });
+
+    if (duplicate) {
+      duplicate.duplicateCount = (duplicate.duplicateCount || 1) + 1;
+      duplicate.duplicateImages = [...new Set([...(duplicate.duplicateImages || [duplicate.beforeImageUrl]), data.beforeImageUrl])];
+      duplicate.duplicateReports = [
+        ...(duplicate.duplicateReports || []),
+        { citizenPhone: data.citizenPhone, submittedAt: new Date().toISOString() }
+      ];
+      saveStoredComplaints(complaints);
+      return { ...duplicate, isDuplicate: true, mergedInto: duplicate.id };
+    }
+
     const newId = `SWM-2026-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const newComplaint = {
@@ -177,6 +200,10 @@ export const api = {
       beforeImageUrl:
         data.beforeImageUrl ||
         'https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?w=800&auto=format&fit=crop&q=60',
+      imageFingerprint,
+      duplicateCount: 1,
+      duplicateImages: [data.beforeImageUrl].filter(Boolean),
+      duplicateReports: [],
       afterImageUrl: null,
       aiVerified: true,
       aiConfidence: data.aiConfidence || 0.96,

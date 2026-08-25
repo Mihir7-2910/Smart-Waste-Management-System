@@ -163,12 +163,10 @@ export function AnalyticsDashboard({ complaints = [] }) {
         <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
           <span className="text-[11px] font-semibold text-slate-400 uppercase">AI Verification Accuracy</span>
           <p className="text-2xl font-extrabold text-purple-400 font-heading">94.8%</p>
-          <span className="text-[10px] text-slate-400">Zero false positives today</span>
         </div>
         <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1">
           <span className="text-[11px] font-semibold text-slate-400 uppercase">Fleet Fuel Saved (Haversine)</span>
           <p className="text-2xl font-extrabold text-amber-400 font-heading">320 Litres</p>
-          <span className="text-[10px] text-amber-400 font-bold">Through route optimization</span>
         </div>
       </div>
 
@@ -217,7 +215,6 @@ export function AnalyticsDashboard({ complaints = [] }) {
               <h3 className="font-heading font-bold text-sm text-white">
                 7-Day Municipal SLA Turnaround Time Trend
               </h3>
-              <p className="text-xs text-slate-400">Comparing actual hours vs 4.0 hour municipal deadline</p>
             </div>
             <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
               Target: &lt; 4.0 Hours

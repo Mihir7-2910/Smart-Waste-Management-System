@@ -21,6 +21,7 @@ import { CameraCaptureModal } from './CameraCaptureModal';
 import { LocationPickerModal } from './LocationPickerModal';
 import { ComplaintTimelineModal } from './ComplaintTimelineModal';
 import { WhatsAppTicketModal } from './WhatsAppTicketModal';
+import { useLanguage } from '../../i18n';
 
 const CATEGORIES = [
   { id: 'OVERFLOWING_BIN', label: 'Overflowing Smart Bin', icon: '🗑️', desc: 'Municipal bin is full and spilling' },
@@ -32,6 +33,7 @@ const CATEGORIES = [
 ];
 
 export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveDemo, onBackToLanding }) {
+  const { translate } = useLanguage();
   const [category, setCategory] = useState('OVERFLOWING_BIN');
   const [description, setDescription] = useState('');
   const [whatsappPhone, setWhatsappPhone] = useState('+91 98765 43210');
@@ -50,11 +52,12 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
   const [selectedWhatsAppComplaint, setSelectedWhatsAppComplaint] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedSuccess, setSubmittedSuccess] = useState(null);
+  const [duplicateMatch, setDuplicateMatch] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!description.trim()) {
-      alert('Please enter a brief description of the waste problem.');
+      alert(translate('Please enter a brief description of the waste problem.'));
       return;
     }
 
@@ -65,7 +68,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
       channel: 'APP',
       citizenPhone: whatsappPhone || '+91 98765 43210',
       category,
-      categoryLabel: categoryItem?.label || 'Waste Grievance',
+      categoryLabel: categoryItem?.label || translate('Waste Grievance'),
       description,
       landmark: landmark || 'Nearby Landmark',
       priority: category === 'HAZARDOUS_WASTE' ? 'CRITICAL' : 'HIGH',
@@ -76,11 +79,18 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
       beforeImageUrl:
         photoData?.imageUrl ||
         'https://images.unsplash.com/photo-1605600659873-d808a13e4d2a?w=800&auto=format&fit=crop&q=60',
+      imageFingerprint: photoData?.imageUrl || null,
       aiConfidence: (photoData?.confidence || 96) / 100,
       aiTags: photoData?.tags || ['Citizen App Verified', 'Municipal Waste']
     });
 
     setIsSubmitting(false);
+    if (newComplaint.isDuplicate) {
+      setDuplicateMatch(newComplaint);
+      setIsSubmitting(false);
+      return;
+    }
+
     setSubmittedSuccess(newComplaint);
 
     // Confetti celebration
@@ -104,12 +114,9 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
             <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               CITIZEN CIVIC PORTAL
             </span>
-            <span className="text-xs text-slate-400 font-medium">• Automated 4-Hr Dispatch</span>
+            <span className="text-xs text-slate-400 font-medium">• {translate('Automated 4-Hr Dispatch')}</span>
           </div>
-          <h2 className="font-heading font-black text-2xl text-white">Log Waste Grievance</h2>
-          <p className="text-xs text-slate-400">
-            Submit photo & location — our system auto-dispatches the nearest sanitation driver immediately.
-          </p>
+          <h2 className="font-heading font-black text-2xl text-white">{translate('Log Waste Grievance')}</h2>
         </div>
 
         {onBackToLanding && (
@@ -117,7 +124,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
             onClick={onBackToLanding}
             className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all cursor-pointer"
           >
-            ← Back to CleanCity Home
+            ← {translate('Back to CleanCity Home')}
           </button>
         )}
       </div>
@@ -132,7 +139,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
                     <CheckCircle2 size={20} />
-                    <span>Grievance Registered & Auto-Dispatched!</span>
+                    <span>{translate('Grievance Registered & Auto-Dispatched!')}</span>
                   </div>
                   <span className="font-mono text-xs font-bold text-emerald-300 bg-emerald-900/90 px-2.5 py-1 rounded-lg border border-emerald-500/40">
                     {submittedSuccess.id}
@@ -149,16 +156,55 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                     className="px-4 py-2 rounded-xl bg-[#00a884] hover:bg-[#00a884]/90 text-slate-950 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
                   >
                     <MessageSquare size={14} />
-                    <span>View Digital WhatsApp Ticket Receipt</span>
+                    <span>{translate('View Digital WhatsApp Ticket Receipt')}</span>
                   </button>
 
                   <button
                     onClick={() => setSelectedTimelineComplaint(submittedSuccess)}
                     className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
                   >
-                    <span>Track Live Status</span>
+                    <span>{translate('Track Live Status')}</span>
                     <ArrowRight size={13} />
                   </button>
+                </div>
+              </div>
+            )}
+
+            {duplicateMatch && (
+              <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-sm">
+                <div className="w-full max-w-md rounded-3xl border border-amber-400/40 bg-slate-900 p-5 shadow-2xl shadow-amber-950/30">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="mb-1 flex items-center gap-2 text-amber-300">
+                        <AlertTriangle size={20} />
+                        <h3 className="text-lg font-black">Duplicate report found</h3>
+                      </div>
+                      <p className="text-sm text-slate-300">This image was already submitted. Both reports were merged into one ticket.</p>
+                    </div>
+                    <button onClick={() => setDuplicateMatch(null)} aria-label="Close duplicate report" className="rounded-xl p-2 text-slate-400 hover:bg-slate-800 hover:text-white">
+                      ×
+                    </button>
+                  </div>
+
+                  <div className="mt-4 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+                    <span className="font-mono text-sm font-black text-emerald-300">{duplicateMatch.id}</span>
+                    <p className="mt-1 text-xs text-slate-300">{duplicateMatch.duplicateCount || 2} submissions merged</p>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    {(duplicateMatch.duplicateImages || [duplicateMatch.beforeImageUrl]).map((image, index) => (
+                      <img key={`${image}-${index}`} src={image} alt={`Merged report ${index + 1}`} className="h-28 w-full rounded-xl border border-slate-700 object-cover" />
+                    ))}
+                  </div>
+
+                  <div className="mt-5 flex gap-2">
+                    <button onClick={() => { setSelectedTimelineComplaint(duplicateMatch); setDuplicateMatch(null); }} className="flex-1 rounded-xl bg-emerald-500 px-3 py-2.5 text-xs font-black text-slate-950 hover:bg-emerald-400">
+                      Track Existing Report
+                    </button>
+                    <button onClick={() => setDuplicateMatch(null)} className="rounded-xl border border-slate-700 px-3 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-800">
+                      Close
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -167,7 +213,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
               {/* Category Selector */}
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2.5">
-                  1. Waste Grievance Category:
+                  {translate('1. Waste Grievance Category:')}
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {CATEGORIES.map((cat) => {
@@ -185,8 +231,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                       >
                         <span className="text-xl">{cat.icon}</span>
                         <div>
-                          <p className="text-xs font-bold">{cat.label}</p>
-                          <p className="text-[10px] text-slate-400 mt-0.5">{cat.desc}</p>
+                          <p className="text-xs font-bold">{translate(cat.label)}</p>
                         </div>
                       </button>
                     );
@@ -199,7 +244,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                 {/* Photo Trigger */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                    2. Photo Evidence:
+                    {translate('2. Photo Evidence:')}
                   </label>
                   <button
                     type="button"
@@ -216,10 +261,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                       </div>
                       <div className="truncate">
                         <p className="text-xs font-bold text-white truncate">
-                          {photoData ? 'Photo Attached & AI Verified' : 'Camera / Upload Photo'}
-                        </p>
-                        <p className="text-[10px] text-slate-400 truncate">
-                          {photoData?.tags?.[0] || 'Camera viewfinder or sample presets'}
+                          {photoData ? translate('Photo Attached & AI Verified') : translate('Camera / Upload Photo')}
                         </p>
                       </div>
                     </div>
@@ -234,7 +276,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                 {/* Location Trigger */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                    3. Geo Location & Pin:
+                    {translate('3. Geo Location & Pin:')}
                   </label>
                   <button
                     type="button"
@@ -247,13 +289,10 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                       </div>
                       <div className="truncate">
                         <p className="text-xs font-bold text-white truncate">{locationData.address}</p>
-                        <p className="text-[10px] text-slate-400 font-mono">
-                          {locationData.latitude.toFixed(4)}, {locationData.longitude.toFixed(4)}
-                        </p>
                       </div>
                     </div>
                     <span className="text-[10px] font-bold bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full whitespace-nowrap">
-                      Edit Pin
+                      {translate('Edit Pin')}
                     </span>
                   </button>
                 </div>
@@ -263,7 +302,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                    4. Prominent Landmark:
+                    {translate('4. Prominent Landmark:')}
                   </label>
                   <div className="relative">
                     <Landmark size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -279,7 +318,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                    5. Citizen WhatsApp Number (For Digital Receipt):
+                    {translate('5. Citizen WhatsApp Number (For Digital Receipt):')}
                   </label>
                   <div className="relative">
                     <Phone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-green-400" />
@@ -298,7 +337,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
               {/* Description Input */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                  6. Problem Description:
+                  {translate('6. Problem Description:')}
                 </label>
                 <textarea
                   rows={3}
@@ -316,7 +355,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-slate-950 font-heading font-black text-sm shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 <Send size={18} />
-                <span>{isSubmitting ? 'Verifying & Submitting...' : 'Submit & Trigger Automated Dispatch'}</span>
+                <span>{translate(isSubmitting ? 'Verifying & Submitting...' : 'Submit & Trigger Automated Dispatch')}</span>
               </button>
             </form>
           </div>
@@ -327,8 +366,7 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
           <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-800 rounded-3xl p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div>
-                <h3 className="font-heading font-bold text-base text-white">My Active Grievances</h3>
-                <p className="text-xs text-slate-400">Track your submitted complaints & digital receipts</p>
+                <h3 className="font-heading font-bold text-base text-white">{translate('My Active Grievances')}</h3>
               </div>
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-bold">
                 {complaints.length} Total
@@ -352,19 +390,19 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                   </div>
 
                   <div className="flex gap-3">
-                    <img
-                      src={c.beforeImageUrl}
-                      alt={c.categoryLabel}
-                      className="w-16 h-16 rounded-xl object-cover border border-slate-800 flex-shrink-0"
-                    />
+                    <div className="grid w-20 flex-shrink-0 grid-cols-2 gap-1">
+                      <div className="relative">
+                        <img src={c.beforeImageUrl} alt={`${c.categoryLabel} before cleaning`} className="h-16 w-full rounded-lg object-cover border border-amber-500/30" />
+                        <span className="absolute bottom-0.5 left-0.5 rounded bg-slate-950/80 px-1 text-[8px] font-bold text-amber-300">Before</span>
+                      </div>
+                      <div className="relative flex h-16 items-center justify-center overflow-hidden rounded-lg border border-emerald-500/30 bg-slate-900">
+                        {c.afterImageUrl ? <img src={c.afterImageUrl} alt={`${c.categoryLabel} after cleaning`} className="h-full w-full object-cover" /> : <span className="text-center text-[8px] font-bold text-slate-500">After<br />Pending</span>}
+                        {c.afterImageUrl && <span className="absolute bottom-0.5 left-0.5 rounded bg-slate-950/80 px-1 text-[8px] font-bold text-emerald-300">After</span>}
+                      </div>
+                    </div>
                     <div className="overflow-hidden space-y-1">
                       <p className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors truncate">
                         {c.categoryLabel}
-                      </p>
-                      <p className="text-[11px] text-slate-400 line-clamp-2">{c.description}</p>
-                      <p className="text-[10px] text-slate-500 flex items-center gap-1 truncate">
-                        <MapPin size={11} className="text-emerald-400 flex-shrink-0" />
-                        <span>{c.address}</span>
                       </p>
                     </div>
                   </div>
@@ -375,14 +413,14 @@ export function CitizenComplaintForm({ complaints, onCreateComplaint, onResolveD
                       className="text-[11px] text-green-400 hover:text-green-300 font-bold flex items-center gap-1 cursor-pointer"
                     >
                       <MessageSquare size={13} />
-                      <span>WhatsApp Receipt</span>
+                      <span>{translate('WhatsApp Receipt')}</span>
                     </button>
 
                     <button
                       onClick={() => setSelectedTimelineComplaint(c)}
                       className="text-[11px] text-slate-300 hover:text-white font-bold flex items-center gap-1 cursor-pointer"
                     >
-                      <span>Timeline</span>
+                      <span>{translate('Timeline')}</span>
                       <ArrowRight size={12} />
                     </button>
                   </div>

@@ -244,11 +244,16 @@ export function PendingComplaintsDrawer({
               >
                 {/* Left Photo & Details */}
                 <div className="flex items-start gap-3.5 overflow-hidden">
-                  <img
-                    src={c.beforeImageUrl}
-                    alt={c.categoryLabel}
-                    className="w-20 h-20 rounded-2xl object-cover border border-slate-800 flex-shrink-0"
-                  />
+                  <div className="grid w-24 flex-shrink-0 grid-cols-2 gap-1">
+                    <div className="relative">
+                      <img src={c.beforeImageUrl} alt={`${c.categoryLabel} before cleaning`} className="h-20 w-full rounded-xl object-cover border border-amber-500/30" />
+                      <span className="absolute bottom-1 left-1 rounded bg-slate-950/80 px-1 text-[8px] font-bold text-amber-300">Before</span>
+                    </div>
+                    <div className="relative flex h-20 items-center justify-center overflow-hidden rounded-xl border border-emerald-500/30 bg-slate-900">
+                      {c.afterImageUrl ? <img src={c.afterImageUrl} alt={`${c.categoryLabel} after cleaning`} className="h-full w-full object-cover" /> : <span className="text-center text-[9px] font-bold text-slate-500">After<br />Pending</span>}
+                      {c.afterImageUrl && <span className="absolute bottom-1 left-1 rounded bg-slate-950/80 px-1 text-[8px] font-bold text-emerald-300">After</span>}
+                    </div>
+                  </div>
                   <div className="space-y-1 overflow-hidden">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-mono text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
@@ -260,7 +265,6 @@ export function PendingComplaintsDrawer({
                     </div>
 
                     <h4 className="text-sm font-bold text-white truncate">{c.categoryLabel}</h4>
-                    <p className="text-xs text-slate-300 line-clamp-1">{c.description}</p>
                     <p className="text-[11px] text-slate-400 flex items-center gap-1">
                       <MapPin size={12} className="text-emerald-400 flex-shrink-0" />
                       <span>{c.address} ({c.ward})</span>
@@ -323,7 +327,6 @@ export function PendingComplaintsDrawer({
                 </div>
                 <div>
                   <h3 className="font-heading font-bold text-lg text-white">Haversine Nearest-Driver Dispatch</h3>
-                  <p className="text-xs text-slate-400">Calculates optimal municipal vehicle by geographical distance</p>
                 </div>
               </div>
               <button

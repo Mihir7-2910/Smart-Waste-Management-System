@@ -12,8 +12,10 @@ import {
   Check
 } from 'lucide-react';
 import { INITIAL_DRIVERS } from '../../data/mockData';
+import { useLanguage } from '../../i18n';
 
 export function LoginModal({ isOpen, onClose, onLoginSuccess }) {
+  const { translate } = useLanguage();
   const [roleTab, setRoleTab] = useState('ADMIN'); // ADMIN, DRIVER
   const [adminEmail, setAdminEmail] = useState('admin@cleancity.gov.in');
   const [adminPassword, setAdminPassword] = useState('admin123');
@@ -34,7 +36,7 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess }) {
       });
       onClose();
     } else {
-      setError('Please enter valid admin credentials.');
+      setError(translate('Please enter valid admin credentials.'));
     }
   };
 

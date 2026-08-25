@@ -18,6 +18,7 @@ import {
   Sun,
   Moon
 } from 'lucide-react';
+import { useLanguage } from '../../i18n';
 
 export function Navbar({
   currentUser,
@@ -32,6 +33,7 @@ export function Navbar({
   theme,
   onToggleTheme
 }) {
+  const { language, setLanguage, t } = useLanguage();
   const [time, setTime] = useState(new Date().toLocaleTimeString('en-US', { hour12: true }));
 
   useEffect(() => {
@@ -120,7 +122,7 @@ export function Navbar({
                 }`}
               >
                 <Home size={15} />
-                <span>Home</span>
+                <span>{t.home}</span>
               </button>
 
               <button
@@ -132,7 +134,7 @@ export function Navbar({
                 }`}
               >
                 <Camera size={15} />
-                <span>Raise a Complaint</span>
+                <span>{t.raiseComplaint}</span>
                 <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                   Quick
                 </span>
@@ -143,7 +145,7 @@ export function Navbar({
                 className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition-all cursor-pointer"
               >
                 <Search size={15} className="text-emerald-400" />
-                <span>Track My Ticket</span>
+                <span>{t.trackTicket}</span>
               </button>
             </nav>
           )}
@@ -218,6 +220,19 @@ export function Navbar({
 
           {/* Right Action Controls */}
           <div className="flex items-center gap-2.5">
+            <label className="flex items-center rounded-xl border border-slate-700 bg-slate-900 px-2.5 py-2 text-xs text-slate-300">
+              <span className="sr-only">{t.language}</span>
+              <select
+                value={language}
+                onChange={(event) => setLanguage(event.target.value)}
+                aria-label={t.language}
+                className="max-w-[92px] cursor-pointer bg-transparent font-semibold text-slate-200 outline-none"
+              >
+                <option value="en">English</option>
+                <option value="hi">हिन्दी</option>
+                <option value="gu">ગુજરાતી</option>
+              </select>
+            </label>
             <button
               onClick={onToggleTheme}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
@@ -245,7 +260,7 @@ export function Navbar({
                 className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 hover:border-amber-500/50 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
               >
                 <Lock size={14} className="text-amber-400" />
-                <span>Staff Login</span>
+                <span>{t.staffLogin}</span>
               </button>
             )}
 
@@ -256,7 +271,7 @@ export function Navbar({
                 className="px-3.5 py-2 rounded-xl bg-rose-950/40 hover:bg-rose-950/70 text-rose-300 border border-rose-500/40 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-md"
               >
                 <LogOut size={14} />
-                <span>Log Out</span>
+                <span>{t.logout}</span>
               </button>
             )}
           </div>
@@ -274,7 +289,7 @@ export function Navbar({
               }`}
             >
               <Home size={14} />
-              <span>Home</span>
+              <span>{t.home}</span>
             </button>
             <button
               onClick={() => setActiveTab('citizen-report')}
@@ -285,14 +300,14 @@ export function Navbar({
               }`}
             >
               <Camera size={14} />
-              <span>Raise Complaint</span>
+              <span>{t.raiseComplaint}</span>
             </button>
             <button
               onClick={onOpenTrackModal}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap bg-slate-900 text-slate-400 border border-slate-800 cursor-pointer"
             >
               <Search size={14} className="text-emerald-400" />
-              <span>Track Ticket</span>
+              <span>{t.trackTicket}</span>
             </button>
           </div>
         )}

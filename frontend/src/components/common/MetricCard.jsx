@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../../i18n';
 
 export function MetricCard({
   title,
@@ -10,6 +11,7 @@ export function MetricCard({
   onClick,
   trend,
 }) {
+  const { translate } = useLanguage();
   const colorStyles = {
     emerald: {
       bg: 'from-emerald-950/40 to-slate-900/60 border-emerald-500/20 text-emerald-400',
@@ -54,7 +56,7 @@ export function MetricCard({
     >
       <div className="flex items-center justify-between w-full mb-2">
         <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-          {title}
+          {translate(title)}
         </span>
         {Icon && (
           <div className={`p-2 rounded-xl ${style.iconBg}`}>
@@ -69,16 +71,11 @@ export function MetricCard({
         </span>
         {trend && (
           <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-800/80 text-slate-300 border border-slate-700">
-            {trend}
+            {translate(trend)}
           </span>
         )}
       </div>
 
-      {subtitle && (
-        <p className="text-xs text-slate-400 mt-2 font-medium truncate w-full">
-          {subtitle}
-        </p>
-      )}
     </button>
   );
 }

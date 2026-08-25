@@ -147,6 +147,136 @@ html[data-theme='light'] .leaflet-control-zoom a {
   border-color: #d6e0da !important;
 }
 
+html[data-theme='dark'] body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(16, 185, 129, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 10%, rgba(14, 165, 233, 0.1), transparent 25%),
+    #030712;
+}
+
+html[data-theme='dark'] header {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+}
+
+html[data-theme='dark'] main > div:not(.landing-page) > div,
+html[data-theme='dark'] .landing-page > section:not(.landing-hero) {
+  border-color: rgba(71, 85, 105, 0.62) !important;
+}
+
+html[data-theme='light'] body {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(16, 185, 129, 0.14), transparent 25%),
+    radial-gradient(circle at 92% 4%, rgba(14, 165, 233, 0.12), transparent 22%),
+    #e9f0ed;
+}
+
+html[data-theme='light'] header {
+  background: rgba(248, 252, 250, 0.94) !important;
+  border-color: #b9cbc2 !important;
+  box-shadow: 0 8px 24px rgba(28, 60, 45, 0.12);
+}
+
+html[data-theme='light'] header .bg-slate-900\/90,
+html[data-theme='light'] header .bg-slate-900 {
+  background-color: #e1eee8 !important;
+}
+
+html[data-theme='light'] header .text-slate-400,
+html[data-theme='light'] header .text-slate-300 {
+  color: #3f554b !important;
+}
+
+html[data-theme='light'] main > div:not(.landing-page) > div,
+html[data-theme='light'] .landing-page > section:not(.landing-hero) {
+  border-color: #b7cbc0 !important;
+  box-shadow: 0 14px 32px rgba(28, 60, 45, 0.1) !important;
+}
+
+html[data-theme='light'] input,
+html[data-theme='light'] select,
+html[data-theme='light'] textarea {
+  border-color: #9fb8aa !important;
+  box-shadow: inset 0 1px 2px rgba(28, 60, 45, 0.06);
+}
+
+html[data-theme='light'] input::placeholder,
+html[data-theme='light'] textarea::placeholder {
+  color: #60766b !important;
+}
+
+html[data-theme='light'] .text-slate-500,
+html[data-theme='light'] .text-slate-600 {
+  color: #53695e !important;
+}
+
+html[data-theme='light'] .text-emerald-400,
+html[data-theme='light'] .text-emerald-300 {
+  color: #087f5b !important;
+}
+
+html[data-theme='light'] .text-cyan-400,
+html[data-theme='light'] .text-cyan-300 {
+  color: #087b8c !important;
+}
+
+html[data-theme='light'] .text-amber-400,
+html[data-theme='light'] .text-amber-300 {
+  color: #a45b00 !important;
+}
+
+html[data-theme='light'] .theme-toggle,
+html[data-theme='light'] header select {
+  background-color: #e1eee8 !important;
+  border-color: #9fb8aa !important;
+  color: #20372c !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section {
+  border-color: #2d9f78 !important;
+  box-shadow: 0 18px 40px rgba(28, 60, 45, 0.22) !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section .bg-slate-950\/95,
+html[data-theme='light'] .fixed.z-\[1000\] > section .bg-slate-950,
+html[data-theme='light'] .fixed.z-\[1000\] > section .bg-slate-900,
+html[data-theme='light'] .fixed.z-\[1000\] > section .bg-slate-800 {
+  background-color: #101827 !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section .text-white,
+html[data-theme='light'] .fixed.z-\[1000\] > section .text-slate-200,
+html[data-theme='light'] .fixed.z-\[1000\] > section .text-slate-300 {
+  color: #f3f7f5 !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section .text-slate-400,
+html[data-theme='light'] .fixed.z-\[1000\] > section .text-slate-500 {
+  color: #b9c9c3 !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section input {
+  background-color: #172235 !important;
+  color: #f3f7f5 !important;
+  border-color: #60766d !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section input::placeholder {
+  color: #a8bbb3 !important;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section button {
+  color: #dce9e4;
+}
+
+html[data-theme='light'] .fixed.z-\[1000\] > section button:hover {
+  color: #7ce7bd;
+}
+
+html[data-theme='light'] header > div:first-child {
+  background: linear-gradient(90deg, #063b3d, #0c2537 55%, #30204f) !important;
+  color: #d7f9eb !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

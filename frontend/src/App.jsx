@@ -13,6 +13,8 @@ import { KarmaRewardsModal } from './components/citizen/KarmaRewardsModal';
 import { ComplaintTimelineModal } from './components/citizen/ComplaintTimelineModal';
 import { LoginModal } from './components/auth/LoginModal';
 import { api } from './services/api';
+import { LanguageProvider } from './i18n';
+import { HelpChatbot } from './components/common/HelpChatbot';
 
 export function App() {
   // Authentication Role State: 'CITIZEN' (Public Default), 'ADMIN', 'DRIVER'
@@ -118,7 +120,8 @@ export function App() {
   const isDriver = currentUser.role === 'DRIVER';
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-slate-950 font-sans">
+    <LanguageProvider>
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-slate-950 font-sans">
       {/* Role-Aware Top Navigation */}
       <Navbar
         currentUser={currentUser}
@@ -249,7 +252,9 @@ export function App() {
         onClose={() => setActiveTimelineComplaint(null)}
         onResolveDemo={(id) => handleCompleteJob('DRV-01', id, null)}
       />
-    </div>
+      <HelpChatbot />
+      </div>
+    </LanguageProvider>
   );
 }
 

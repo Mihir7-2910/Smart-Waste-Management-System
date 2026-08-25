@@ -17,48 +17,41 @@ import {
   Users
 } from 'lucide-react';
 import {
-  CLEANLINESS_QUOTES,
   AWARENESS_POSTERS,
   CLEAN_CITY_TIPS,
   COMMUNITY_IMPACT
 } from '../../data/mockData';
 import cleanCityImage from '../../assets/clean-city.jpg';
+import { useLanguage } from '../../i18n';
 
 export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenKarma, activeComplaintsCount }) {
-  const [quoteIndex, setQuoteIndex] = useState(0);
+  const { t } = useLanguage();
+  const copy = t;
+    const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setQuoteIndex((prev) => (prev + 1) % CLEANLINESS_QUOTES.length);
+      setQuoteIndex((prev) => (prev + 1) % copy.quotes.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [copy.quotes.length]);
 
-  const currentQuote = CLEANLINESS_QUOTES[quoteIndex];
+  const currentQuote = { quote: copy.quotes[quoteIndex][0], author: copy.quotes[quoteIndex][1] };
 
   const features = [
-    {
-      icon: <MapPinned className="h-5 w-5 text-emerald-300" />,
-      title: 'Live waste hotspots',
-      description: 'Track overflowing bins and illegal dumping clusters before they spread.'
-    },
-    {
-      icon: <Truck className="h-5 w-5 text-cyan-300" />,
-      title: 'Auto-dispatch fleet',
-      description: 'Nearest drivers are assigned automatically for faster response times.'
-    },
-    {
-      icon: <BellRing className="h-5 w-5 text-amber-300" />,
-      title: 'Smart citizen alerts',
-      description: 'Get updates on complaint status, ETA, and cleanup confirmation.'
-    }
+    { icon: <MapPinned className="h-5 w-5 text-emerald-300" />, title: copy.features[0][0], description: copy.features[0][1] },
+    { icon: <Truck className="h-5 w-5 text-cyan-300" />, title: copy.features[1][0], description: copy.features[1][1] },
+    { icon: <BellRing className="h-5 w-5 text-amber-300" />, title: copy.features[2][0], description: copy.features[2][1] }
   ];
 
   const steps = [
-    { number: '01', title: 'Report', description: 'Take a photo and share the exact location in under a minute.' },
-    { number: '02', title: 'Dispatch', description: 'Our AI matches the issue to the nearest municipal vehicle and crew.' },
-    { number: '03', title: 'Resolve', description: 'Track progress live and confirm the area is cleaned and safe.' }
+    { number: '01', title: copy.steps[0][0], description: copy.steps[0][1] },
+    { number: '02', title: copy.steps[1][0], description: copy.steps[1][1] },
+    { number: '03', title: copy.steps[2][0], description: copy.steps[2][1] }
   ];
+
+  const posters = AWARENESS_POSTERS.map((poster, index) => ({ ...poster, tag: copy.posters[index][0], title: copy.posters[index][1], desc: copy.posters[index][2] }));
+  const tips = CLEAN_CITY_TIPS.map((tip, index) => ({ ...tip, title: copy.tips[index][0], desc: copy.tips[index][1] }));
 
   return (
     <div
@@ -90,18 +83,18 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">
               <Sparkles size={14} className="animate-pulse" />
-              Smart waste response
+              {t.smartWasteResponse}
             </div>
 
             <div className="space-y-4">
               <h1 className="landing-hero-title text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Cleaner streets,
+                {t.cleanerStreets}
                 <span className="block bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 bg-clip-text text-transparent">
-                  faster action.
+                  {t.fasterAction}
                 </span>
               </h1>
               <p className="landing-hero-copy max-w-xl text-base text-slate-300 sm:text-lg">
-                Report garbage, overflow, and dumping instantly. CleanCity AI routes the issue to the nearest team and keeps citizens informed every step of the way.
+                {t.reportIntro}
               </p>
             </div>
 
@@ -111,7 +104,7 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
                 className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-400 px-6 py-3.5 text-sm font-extrabold text-slate-950 shadow-lg shadow-emerald-500/25 transition hover:-translate-y-0.5 hover:shadow-emerald-400/35"
               >
                 <Camera size={18} />
-                Raise complaint
+                {t.raiseComplaint}
               </button>
 
               <button
@@ -119,18 +112,18 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
                 className="inline-flex items-center gap-2 rounded-2xl border border-slate-700 bg-slate-900/80 px-5 py-3.5 text-sm font-bold text-slate-100 transition hover:border-emerald-500/40 hover:bg-slate-800"
               >
                 <Search size={18} className="text-emerald-300" />
-                Track complaint
+                {t.trackComplaint}
               </button>
             </div>
 
             <div className="flex flex-wrap gap-4 border-t border-slate-800/80 pt-4 text-xs text-slate-400">
               <span className="inline-flex items-center gap-2 text-emerald-300">
                 <ShieldCheck size={15} />
-                4-hour SLA guarantee
+                {t.sla}
               </span>
               <span className="inline-flex items-center gap-2 text-slate-300">
                 <MessageSquare size={15} className="text-green-400" />
-                WhatsApp confirmations
+                {t.whatsapp}
               </span>
             </div>
           </div>
@@ -139,34 +132,34 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
             <div className="rounded-[24px] border border-slate-700/80 bg-slate-950/75 p-4 shadow-2xl backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between rounded-2xl border border-emerald-500/20 bg-emerald-500/10 px-3 py-2">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-emerald-300">Live status</p>
-                  <p className="mt-1 text-lg font-bold text-white">City operations online</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-emerald-300">{t.liveStatus}</p>
+                  <p className="mt-1 text-lg font-bold text-white">{t.cityOnline}</p>
                 </div>
                 <span className="flex h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.9)]" />
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Open complaints</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">{t.openComplaints}</p>
                   <p className="mt-2 text-3xl font-black text-white">{activeComplaintsCount ?? 128}</p>
-                  <p className="mt-1 text-xs text-emerald-300">+18% from last week</p>
+                  <p className="mt-1 text-xs text-emerald-300">{copy.wards}</p>
                 </div>
 
                 <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-4">
-                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">Avg. response</p>
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-slate-400">{copy.avgResponse}</p>
                   <p className="mt-2 text-3xl font-black text-cyan-300">2.8h</p>
-                  <p className="mt-1 text-xs text-cyan-300">Inside target SLA</p>
+                  <p className="mt-1 text-xs text-cyan-300">{copy.targetSla}</p>
                 </div>
               </div>
 
               <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-400">Priority queue</p>
-                    <p className="mt-1 text-sm font-semibold text-white">Overflowing bins near civic square</p>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-slate-400">{t.priorityQueue}</p>
+                    <p className="mt-1 text-sm font-semibold text-white">{copy.priorityIssue}</p>
                   </div>
                   <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-1 text-[10px] font-bold text-amber-300">
-                    High
+                    {t.high}
                   </span>
                 </div>
                 <div className="mt-4 h-2 rounded-full bg-slate-800">
@@ -189,11 +182,11 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
           </div>
 
           <button
-            onClick={() => setQuoteIndex((prev) => (prev + 1) % CLEANLINESS_QUOTES.length)}
+            onClick={() => setQuoteIndex((prev) => (prev + 1) % copy.quotes.length)}
             className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-950/80 px-3 py-2 text-xs font-bold text-slate-200 transition hover:border-emerald-500/40 hover:text-white"
           >
             <RefreshCw size={14} />
-            Next tip
+            {t.nextTip}
           </button>
         </div>
       </section>
@@ -201,8 +194,8 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Better city operations</p>
-            <h2 className="mt-1 text-2xl font-black text-white">How the platform works</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">{copy.betterOperations}</p>
+            <h2 className="mt-1 text-2xl font-black text-white">{t.howItWorks}</h2>
           </div>
         </div>
 
@@ -231,12 +224,12 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
 
       <section className="space-y-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal-300">Public awareness</p>
-          <h2 className="mt-1 text-2xl font-black text-white">Civic cleanliness awareness</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-teal-300">{copy.publicAwareness}</p>
+            <h2 className="mt-1 text-2xl font-black text-white">{copy.awarenessTitle}</h2>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {AWARENESS_POSTERS.map((poster) => (
+          {posters.map((poster) => (
             <div key={poster.id} className={`awareness-card rounded-[24px] border p-5 ${poster.borderColor} bg-gradient-to-br ${poster.bgGradient} shadow-lg`}>
               <div className="flex items-start justify-between gap-3">
                 <span className="text-3xl">{poster.icon}</span>
@@ -253,7 +246,7 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
                   className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 px-3 py-2.5 text-sm font-black text-slate-950 transition hover:bg-amber-300"
                 >
                   <Camera size={15} />
-                  Report now
+                  {copy.reportNow}
                 </button>
               )}
             </div>
@@ -263,12 +256,12 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
 
       <section className="space-y-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">Everyday habits</p>
-          <h2 className="mt-1 text-2xl font-black text-white">Clean city best practices</h2>
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">{copy.everydayHabits}</p>
+          <h2 className="mt-1 text-2xl font-black text-white">{copy.habitsTitle}</h2>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {CLEAN_CITY_TIPS.map((tip, idx) => (
+          {tips.map((tip, idx) => (
             <div key={idx} className="habit-card flex gap-3 rounded-[22px] border border-slate-800 bg-slate-900/70 p-4">
               <span className="text-2xl">{tip.icon}</span>
               <div>
@@ -283,41 +276,41 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
       <section className="rounded-[28px] border border-slate-800 bg-slate-900/80 p-6 shadow-2xl">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">Community impact</p>
-            <h3 className="mt-1 text-2xl font-black text-white">City-wide waste response metrics</h3>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-300">{copy.communityImpact}</p>
+            <h3 className="mt-1 text-2xl font-black text-white">{copy.cityMetrics}</h3>
           </div>
           <button
             onClick={onOpenKarma}
             className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs font-bold text-amber-300 transition hover:bg-amber-500/15"
           >
             <Award size={15} />
-            View leaderboard
+            {copy.viewLeaderboard}
           </button>
         </div>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-slate-800 bg-slate-950/70 p-4">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">Grievances logged</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-slate-400">{copy.grievancesLogged}</p>
             <p className="mt-2 text-3xl font-black text-white">{COMMUNITY_IMPACT.issuesReported}</p>
-            <p className="mt-1 text-xs text-slate-500">Across 12 city wards</p>
+            <p className="mt-1 text-xs text-slate-500">{copy.wards}</p>
           </div>
 
           <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-emerald-300">Cleaned</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-emerald-300">{copy.cleaned}</p>
             <p className="mt-2 text-3xl font-black text-emerald-300">{COMMUNITY_IMPACT.issuesResolved}</p>
-            <p className="mt-1 text-xs text-emerald-200">{COMMUNITY_IMPACT.resolutionRate} resolution rate</p>
+            <p className="mt-1 text-xs text-emerald-200">{COMMUNITY_IMPACT.resolutionRate} {copy.resolutionRate}</p>
           </div>
 
           <div className="rounded-2xl border border-cyan-500/30 bg-cyan-500/10 p-4">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-cyan-300">Turnaround</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-cyan-300">{copy.turnaround}</p>
             <p className="mt-2 text-3xl font-black text-cyan-300">{COMMUNITY_IMPACT.avgResponseHours}</p>
-            <p className="mt-1 text-xs text-cyan-200">Within SLA target</p>
+            <p className="mt-1 text-xs text-cyan-200">{copy.withinSla}</p>
           </div>
 
           <div className="rounded-2xl border border-violet-500/30 bg-violet-500/10 p-4">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-violet-300">Fleet active</p>
+            <p className="text-[10px] uppercase tracking-[0.18em] text-violet-300">{copy.fleetActive}</p>
             <p className="mt-2 text-3xl font-black text-violet-300">{COMMUNITY_IMPACT.activeSanitationFleet}</p>
-            <p className="mt-1 text-xs text-violet-200">GPS tracked vehicles</p>
+            <p className="mt-1 text-xs text-violet-200">{copy.gpsVehicles}</p>
           </div>
         </div>
       </section>
@@ -326,17 +319,17 @@ export function CitizenLandingPage({ onRaiseComplaint, onTrackComplaint, onOpenK
         <div className="flex flex-col items-center justify-center gap-4 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-slate-950/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em]">
             <TrendingUp size={14} />
-            Act now
+            {copy.actNow}
           </div>
-          <h3 className="text-3xl font-black text-slate-950">Spot litter in your neighbourhood?</h3>
+          <h3 className="text-3xl font-black text-slate-950">{copy.spotLitter}</h3>
           <p className="max-w-xl text-sm text-slate-900/80">
-            Capture the issue, send the location, and let CleanCity AI connect it to the nearest sanitation response in minutes.
+            {copy.reportIntro}
           </p>
           <button
             onClick={onRaiseComplaint}
             className="inline-flex items-center gap-2 rounded-2xl bg-slate-950 px-6 py-3.5 text-sm font-black text-white transition hover:bg-slate-900"
           >
-            Report waste now
+            {t.reportWasteNow}
             <ArrowRight size={16} />
           </button>
         </div>
