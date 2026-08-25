@@ -211,6 +211,7 @@ export const api = {
       slaDeadline: new Date(Date.now() + 4 * 3600 * 1000).toISOString(),
       createdAt: new Date().toISOString(),
       assignedDriver: null,
+      declinedDriverIds: [],
       whatsappMessages: [],
       timeline: [
         {
@@ -273,7 +274,7 @@ export const api = {
 
     drivers.forEach((driver) => {
       // Prefer IDLE or ON_DUTY drivers with capacity
-      if (driver.fillPercentage < 90) {
+      if (driver.fillPercentage < 90 && ['IDLE', 'ON_DUTY'].includes(driver.status) && !complaint.declinedDriverIds?.includes(driver.id)) {
         const dist = calculateDistanceKm(
           complaint.latitude,
           complaint.longitude,
@@ -380,8 +381,16 @@ export const api = {
       saveStoredDrivers(drivers);
     }
 
+    if (complaint && !complaint.declinedDriverIds?.includes(driverId)) {
+      complaint.declinedDriverIds = [...(complaint.declinedDriverIds || []), driverId];
+    }
+
     // Try finding another driver
-    const otherDrivers = drivers.filter((d) => d.id !== driverId && d.fillPercentage < 90);
+    const otherDrivers = drivers.filter(
+      (d) => d.fillPercentage < 90
+        && ['IDLE', 'ON_DUTY'].includes(d.status)
+        && !complaint?.declinedDriverIds?.includes(d.id)
+    );
     let nextDriver = null;
     let minDistance = Infinity;
 
@@ -415,6 +424,7 @@ export const api = {
         complaint.adminAlert = 'NO_DRIVER_ACCEPTED';
         saveStoredComplaints(complaints);
       }
+      saveStoredComplaints(complaints);
     }
 
     return { success: true };
